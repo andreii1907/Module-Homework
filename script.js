@@ -29,15 +29,15 @@ function contBancar(numeCont, sumaInitiala, valutaContului) {
   }
 
   function interogheazaSold() {
-    console.log(
-      `Contul "${nume}" are la momentul actual suma de ${suma} ${valuta}`
-    );
+    console.log(`Contul "${nume}" are la momentul actual suma de ${suma} ${valuta}`);
     const numberSum = Number(suma);
+    const balance = document.getElementById('balanta');
     if (!numberSum) {
+      balance.textContent = `Current balance: 0 ${valuta}`;
       return;
     }
-    const balance = document.getElementById('balanta');
     balance.textContent = `Current balance: ${numberSum} ${valuta}`;
+    console.log(numberSum);
   }
 
   function afiseazaListaDeTranzactii() {
@@ -81,9 +81,7 @@ function contBancar(numeCont, sumaInitiala, valutaContului) {
   const rows = document.getElementsByTagName('table')[0].rows;
   const tb = tBody.rows;
 
-
-
-  deposit.addEventListener('click', function() {
+  function addData (type, alerta ) {
     const row = document.createElement('tr');
     tBody.appendChild(row);
     const tData = document.createElement('td');
@@ -91,53 +89,38 @@ function contBancar(numeCont, sumaInitiala, valutaContului) {
     const newData = document.createElement('td');
     row.appendChild(newData).textContent = today;
     const operation = document.createElement('td');
-    row.appendChild(operation).textContent = 'Deposit';
+    row.appendChild(operation).textContent = type;
     const amount = document.createElement('td');
     const numInput = Number(input.value);
     row.appendChild(amount).textContent = numInput;
 
-    let iNumber = numInput;
-    contCostel.adauga(iNumber);
-    contCostel.interogheazaSold();
-
     // Cod pentru validare
-    if (numInput === 0) {
-      alert("You can't deposit 0 EUR")
+    if (numInput == 0) {
+      alert(alerta)
       row.remove();
     } else if (!numInput) {
     alert('You must use numbers!')
     row.remove();
     }
-    
     input.value = '';
+  }
+
+  deposit.addEventListener('click', function(event) {
+    event.preventDefault();
+    const numInput = Number(input.value);
+    let iNumber = numInput;
+    contCostel.adauga(iNumber);
+    contCostel.interogheazaSold();
+    addData('Deposit','You need to add more then 0!');
   });
 
-  withdraw.addEventListener('click', function() {
-    const row = document.createElement('tr');
-    tBody.appendChild(row);
-    const tData = document.createElement('td');
-    row.appendChild(tData).textContent = tb.length;
-    const newData = document.createElement('td');
-    row.appendChild(newData).textContent = today;
-    const operation = document.createElement('td');
-    row.appendChild(operation).textContent = 'Withdraw';
-    const amount = document.createElement('td');
+  withdraw.addEventListener('click', function(event) {
+    event.preventDefault();
     const numInput = Number(input.value);
-    row.appendChild(amount).textContent = numInput;
-    let iNumber2 = numInput;
-    contCostel.retrage(iNumber2); 
+    let iNumber = numInput;
+    contCostel.retrage(iNumber);
     contCostel.interogheazaSold();
-
-     // Cod pentru validare
-     if (numInput == 0) {
-      alert("You can't withdraw 0 EUR!")
-      row.remove();
-    } else if (!numInput) {
-      alert('You must use numbers!')
-      row.remove();
-    }
-
-    input.value = '';
+    addData('Withdraw','You need to withdraw more then 0!');
   });
 
 
